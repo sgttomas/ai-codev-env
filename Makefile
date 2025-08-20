@@ -5,3 +5,17 @@
 status/mirrors:
 	@bash projects/ai-env/scripts/mirror-status.sh $(if $(SINCE),--since $(SINCE),)
 
+.PHONY: doc/health
+
+# Run documentation health check for a project
+# Usage: make doc/health PROJECT=projects/vibe-project [DOC_HEALTH_MAX_AGE_DAYS=60]
+doc/health:
+	@[ -n "$(PROJECT)" ] || (echo "Set PROJECT=<path> e.g. projects/vibe-project" && exit 2)
+	@DOC_HEALTH_MAX_AGE_DAYS=$(DOC_HEALTH_MAX_AGE_DAYS) bash projects/ai-env/scripts/doc-health.sh $(PROJECT)
+
+.PHONY: repos/cmd
+
+# Run a command across child repos
+# Usage: make repos/cmd CMD='git status -s' [INCLUDE='*'] [EXCLUDE='']
+repos/cmd:
+	@bash projects/ai-env/scripts/all-repos.sh $(if $(INCLUDE),--include '$(INCLUDE)',) $(if $(EXCLUDE),--exclude '$(EXCLUDE)',) -- bash -lc "$(CMD)"

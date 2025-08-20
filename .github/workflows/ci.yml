@@ -20,6 +20,29 @@ jobs:
       - name: Secret scan (conservative)
         run: bash bin/secret-scan.sh --path .
 
+  doc-health:
+    name: Documentation Health (non-blocking)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Vibe Project doc health
+        run: bash projects/ai-env/scripts/doc-health.sh projects/vibe-project
+        continue-on-error: true
+
+      - name: Scripts repo doc health
+        run: bash projects/ai-env/scripts/doc-health.sh projects/scripts
+        continue-on-error: true
+
+      - name: Prompts repo doc health
+        run: bash projects/ai-env/scripts/doc-health.sh projects/prompts
+        continue-on-error: true
+
+      - name: Workflows repo doc health
+        run: bash projects/ai-env/scripts/doc-health.sh projects/workflows
+        continue-on-error: true
+
   python:
     name: Python tests
     runs-on: ubuntu-latest
