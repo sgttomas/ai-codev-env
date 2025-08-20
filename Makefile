@@ -5,6 +5,13 @@
 status/mirrors:
 	@bash projects/ai-env/scripts/mirror-status.sh $(if $(SINCE),--since $(SINCE),)
 
+.PHONY: status/drift
+
+# Compare mirror vs canonical drift for prompts/workflows/scripts
+# Usage: make status/drift MIRROR=projects/ai-env CANONICAL=projects
+status/drift:
+	@bash projects/ai-env/scripts/mirror-status.sh $(if $(MIRROR),--mirror-root $(MIRROR),) $(if $(CANONICAL),--drift-root $(CANONICAL),)
+
 .PHONY: doc/health
 
 # Run documentation health check for a project
