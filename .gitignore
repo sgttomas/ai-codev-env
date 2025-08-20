@@ -1,0 +1,27 @@
+# General ignores
+data/
+outputs/
+.cache/
+tmp/
+.env
+
+# Common noise
+.DS_Store
+*.log
+*.tmp
+*.swp
+
+# Secrets and private exports (do not commit)
+docs/secret/
+docs/semantic-valley/
+
+# Envs and deps
+venv/
+.venv/
+node_modules/
+__pycache__/
+dist/
+build/
+
+# Keep child repos independent from the root
+projects/
