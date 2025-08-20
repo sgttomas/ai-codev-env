@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  independence:
+    name: Independence + Secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check repo independence
+        run: bash bin/check-git-independence.sh --verbose
+
+      - name: Secret scan (conservative)
+        run: bash bin/secret-scan.sh --path .
+
+  python:
+    name: Python tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run python-app tests if present
+        run: |
+          if [ -d projects/python-app ]; then
+            cd projects/python-app
+            python -m unittest -v || exit 1
+          else
+            echo "projects/python-app not found; skipping"
+          fi
+
+  node:
+    name: Node tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+
+      - name: Run node-app tests if present
+        run: |
+          if [ -d projects/node-app ]; then
+            npm ci --prefix projects/node-app || npm install --prefix projects/node-app
+            npm test --prefix projects/node-app
+          else
+            echo "projects/node-app not found; skipping"
+          fi
