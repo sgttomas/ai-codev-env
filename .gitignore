@@ -25,3 +25,4 @@ build/
 
 # Keep child repos independent from the root
 projects/
+**/devhistory/
